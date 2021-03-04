@@ -2,7 +2,7 @@ import axios from 'axios';
 import {APIRootPath} from '@fed-exam/config';
 
 export type Ticket = {
-    id: string,
+    id: string;
     title: string;
     content: string;
     creationTime: number;

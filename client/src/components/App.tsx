@@ -1,15 +1,15 @@
 import React from "react";
 import "./App.scss";
-import SearchableTicketList from "./SearchableTicketList";
+import FilterableTicketList from "./FilterableTicketList";
 
 class App extends React.Component {
-  render() {
-    return (
-      <main>
-        <SearchableTicketList />
-      </main>
-    );
-  }
+    render() {
+        return (
+            <main>
+                <FilterableTicketList />
+            </main>
+        );
+    }
 }
 
 export default App;

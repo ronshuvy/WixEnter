@@ -1,6 +1,5 @@
 import React from "react";
 import { Ticket as TicketType } from "../api";
-import { SearchBarProps } from "./SearchBar";
 
 export type TicketProps = {
     ticket: TicketType;
@@ -19,6 +18,7 @@ class Ticket extends React.Component<TicketProps, {}> {
 
     render() {
         const { ticket } = this.props;
+        const labels = ticket.labels;
 
         return (
             <div className="ticket">
@@ -30,6 +30,17 @@ class Ticket extends React.Component<TicketProps, {}> {
                 <footer>
                     <div className="meta-data">
                         By {ticket.userEmail} | {new Date(ticket.creationTime).toLocaleString()}
+                    </div>
+                    <div className="labels">
+                        {labels
+                            ? labels.map((label) => (
+                                  <p>
+                                      <span key={label} className="label">
+                                          {label}
+                                      </span>
+                                  </p>
+                              ))
+                            : null}
                     </div>
                 </footer>
             </div>

@@ -72,7 +72,7 @@ class FilterableTicketList extends React.Component<{}, SearchableTicketListState
                 <header>
                     <SearchBar searchText={search} onSearchTextChange={this.onSearch} />
                 </header>
-                {tickets && (
+                {tickets ? (
                     <div className="results">
                         Showing {tickets.length} results
                         {hiddenTickets.size ? (
@@ -83,7 +83,7 @@ class FilterableTicketList extends React.Component<{}, SearchableTicketListState
                             </span>
                         ) : null}
                     </div>
-                )}
+                ) : null}
                 {tickets ? (
                     <TicketList
                         tickets={this.getFilterTickets(tickets)}

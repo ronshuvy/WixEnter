@@ -1,9 +1,7 @@
 body {
 	font-family: 'Open Sans', sans-serif;
-
 	background-color: #f5f9fc;
 	padding-top: 100px;
-
 	padding: 50px;
 
 	main {
@@ -15,14 +13,11 @@ body {
 		font-weight: 300;
 	}
 
-	.results {
-		color: #7a92a5;
-		font-size: 12px;
-		margin: 12px 5px;
-	}
-
-	.hidden {
-		font-style: italic;
+	button {
+		background-color: #f5f9fc;
+		cursor: pointer;
+		border: none;
+		outline:none;
 	}
 
 	header {
@@ -56,6 +51,28 @@ body {
 		}
 	}
 
+	.filter {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		width: 100%;
+
+		.results, .sortBy {
+			color: #7a92a5;
+			font-size: 12px;
+			margin: 12px 5px;
+		}
+
+		.sort-btn {
+			color: #7a92a5;
+		}
+
+		.hidden {
+			font-style: italic;
+		}
+
+	}
+
 	a {
 		color: #3899ec;
 		cursor: pointer;
@@ -63,14 +80,7 @@ body {
 		font-size: 12px;
 	}
 
-	button {
-		cursor: pointer;
-		border: none;
-		outline:none;
-	}
-
 	.tickets {
-
 		list-style-type: none;
 		margin: 0;
 		padding: 0;
@@ -131,7 +141,6 @@ body {
 
 				.labels {
 					display: flex;
-
 				}
 
 				.label {

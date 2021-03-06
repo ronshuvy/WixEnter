@@ -6,19 +6,32 @@ export type TicketProps = {
     onHideTicket: (id: string) => void;
 };
 
-class Ticket extends React.Component<TicketProps, {}> {
+export type TicketState = {
+    contentText: React.RefObject<unknown>;
+    hi: string;
+};
+
+class Ticket extends React.Component<TicketProps, TicketState> {
     constructor(props: TicketProps) {
         super(props);
         this.handleTicketHide = this.handleTicketHide.bind(this);
     }
 
+    contentText: React.RefObject<unknown> = React.createRef();
+
     handleTicketHide() {
         this.props.onHideTicket(this.props.ticket.id);
+    }
+
+    getLinesCount() {
+        const node = this.contentText.current;
+        console.log(node);
     }
 
     render() {
         const { ticket } = this.props;
         const labels = ticket.labels;
+        this.getLinesCount();
 
         return (
             <div className="ticket">
@@ -26,7 +39,9 @@ class Ticket extends React.Component<TicketProps, {}> {
                     Hide
                 </button>
                 <h5 className="title">{ticket.title}</h5>
-                <p className="content">{ticket.content}</p>
+                <p className="content" ref={this.contentText}>
+                    {ticket.content}
+                </p>
                 <footer>
                     <div className="meta-data">
                         By {ticket.userEmail} | {new Date(ticket.creationTime).toLocaleString()}

@@ -73,15 +73,22 @@ class FilterableTicketList extends React.Component<{}, SearchableTicketListState
                     <SearchBar searchText={search} onSearchTextChange={this.onSearch} />
                 </header>
                 {tickets ? (
-                    <div className="results">
-                        Showing {tickets.length} results
-                        {hiddenTickets.size ? (
-                            <span className="hidden">
-                                {" "}
-                                ({hiddenTickets.size} hidden tickets -{" "}
-                                <a onClick={this.onRestoreTickets}> restore</a>)
-                            </span>
-                        ) : null}
+                    <div className="filter">
+                        <div className="results">
+                            Showing {tickets.length} results
+                            {hiddenTickets.size ? (
+                                <span className="hidden">
+                                    {" "}
+                                    ({hiddenTickets.size} hidden tickets -{" "}
+                                    <a onClick={this.onRestoreTickets}> restore</a>)
+                                </span>
+                            ) : null}
+                        </div>
+                        <div className="sortBy">
+                            Sort by: <button className="sort-btn">date</button> |
+                            <button className="sort-btn">title</button> |
+                            <button className="sort-btn">email</button>
+                        </div>
                     </div>
                 ) : null}
                 {tickets ? (

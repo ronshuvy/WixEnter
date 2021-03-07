@@ -8,22 +8,46 @@ export type TicketProps = {
 };
 
 export type TicketState = {
-  contentText: React.RefObject<unknown>;
-  hi: string;
+  priority: number;
 };
 
 class Ticket extends React.Component<TicketProps, TicketState> {
   constructor(props: TicketProps) {
     super(props);
+    this.state = {
+      priority: 0,
+    };
     this.handleTicketHide = this.handleTicketHide.bind(this);
+    this.handlePriorityClick = this.handlePriorityClick.bind(this);
   }
 
   handleTicketHide() {
     this.props.onHideTicket(this.props.ticket.id);
   }
 
+  handlePriorityClick() {
+    let curr = this.state.priority;
+    this.setState({
+      priority: (curr + 1) % 4,
+    });
+  }
+
+  getPriorityLevel() {
+    switch (this.state.priority) {
+      case 0:
+        return "Default";
+      case 1:
+        return "Low";
+      case 2:
+        return "Medium";
+      case 3:
+        return "High";
+    }
+  }
+
   render() {
     const { ticket } = this.props;
+    const { priority } = this.state;
     const labels = ticket.labels;
 
     return (
@@ -47,6 +71,11 @@ class Ticket extends React.Component<TicketProps, TicketState> {
               : null}
           </div>
         </footer>
+        <span>
+          <button className={`priority${priority}`} onClick={this.handlePriorityClick}>
+            {this.getPriorityLevel()} Priority
+          </button>
+        </span>
       </div>
     );
   }

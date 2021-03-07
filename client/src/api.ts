@@ -24,6 +24,12 @@ export const sortKeys: { [k: string]: any } = {
   email: (t1: Ticket, t2: Ticket) => t1.userEmail.localeCompare(t2.userEmail),
 };
 
+export const searchFilters: { [k: string]: any } = {
+  from: (t: Ticket, v: string) => t.userEmail === v,
+  before: (t: Ticket, v: string) => t.creationTime <= new Date(v).getTime(),
+  after: (t: Ticket, v: string) => t.creationTime >= new Date(v).getTime(),
+};
+
 export type ApiClient = {
   getTickets: (params?: getTicketsParams) => Promise<Ticket[]>;
 };

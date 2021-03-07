@@ -195,6 +195,35 @@ body {
 
 				}
 			}
+			.priority0, .priority1, .priority2, .priority3{
+				border: none;
+				color: white;
+				text-align: center;
+				text-decoration: none;
+				font-size: 12px;
+				display: inline-block;
+				margin: 4px 2px;
+				cursor: pointer;
+				border-radius: 3px;
+			}
+			.priority0:hover, .priority1:hover, .priority2:hover, .priority3:hover{
+				opacity: 0.6;
+			}
+
+			.priority0 {
+				background-color: #7a92a5;
+			}
+			.priority1 {
+				background-color: #4CAF50;
+			}
+			.priority2 {
+				background-color: #fba52c;
+			}
+			.priority3 {
+				background-color: #cd0e0e;
+			}
+
+
 		}
 	}
 }

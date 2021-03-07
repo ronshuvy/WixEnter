@@ -104,7 +104,7 @@ class FilterableTicketList extends React.Component<{}, FilterableTicketListState
         {tickets ? (
           <div className="filter-bar">
             <div className="results">
-              Showing {tickets.length} results
+              Showing {tickets.length - hiddenTickets.size} results
               {hiddenTickets.size ? (
                 <span className="hidden">
                   {" "}

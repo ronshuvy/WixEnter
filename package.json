@@ -18,7 +18,12 @@
     "lerna": "^3.13.1"
   },
   "prettier": {
-    "tabWidth": 4,
+    "tabWidth": 2,
     "printWidth": 100
+  },
+  "dependencies": {
+    "@types/react-show-more": "^2.0.2",
+    "@types/react-truncate": "^2.3.3",
+    "react-show-more": "^2.0.0"
   }
 }

@@ -1,35 +1,72 @@
-import { sortKeys as comparatorStrategy } from "../client/src/api";
+import { sortKeys as comparatorStrategy, Ticket, PAGE_SIZE } from "../client/src/api";
 import { tempData } from "./temp-data";
 import express from "express";
 
 const router = express.Router();
 
-const PAGE_SIZE = 20;
-
 // @desc     Get tickets list
 // @access   Public
 // @ts-ignore
 router.get("/", [], (req, res) => {
-  const searchVal: string = String(req.query.superSearch);
-  const sortKey: string = String(req.query.sortBy);
-  const page: number = Number(req.query.page) || 1;
-  console.log("1");
+  const searchInput: string = req.query.superSearch;
+  const sortKey: string = req.query.sortBy;
+  const page: number = req.query.page || 1;
 
-  filterTickets(searchVal);
-  sortTickets(sortKey);
-  return res.send(paginateTickets(page));
+  const filteredTickets: Ticket[] = filterTickets(searchInput);
+  const sortedTickets: Ticket[] = sortTickets(filteredTickets, sortKey);
+  return res.send(paginateTickets(sortedTickets, page));
 });
 
-function filterTickets(searchVal: string) {}
+function filterTickets(searchInput: string) {
+  if (!searchInput || searchInput.length == 0) return tempData;
 
-function sortTickets(sortKey: string) {
-  if (sortKey && comparatorStrategy[sortKey]) {
-    tempData.sort(comparatorStrategy[sortKey]);
+  let [key, content] = SplitByFirstOccurrence(searchInput, ":");
+
+  if (key.length == 0) {
+    return tempData.filter((t) =>
+      (t.title.toLowerCase() + t.content.toLowerCase()).includes(content.toLowerCase())
+    );
   }
+
+  let [val, search] = SplitByFirstOccurrence(content, " ");
+  if (val.length == 0 && key.length != 0) [val, search] = [search, val];
+
+  let filterFunc: (t: Ticket) => boolean;
+  switch (key) {
+    case "from":
+      filterFunc = (t: Ticket) => t.userEmail === val;
+      break;
+    case "before":
+      filterFunc = (t: Ticket) => t.creationTime <= new Date(val).getTime();
+      break;
+    case "after":
+      filterFunc = (t: Ticket) => t.creationTime >= new Date(val).getTime();
+      break;
+    default:
+      filterFunc = () => true;
+  }
+
+  return tempData.filter(
+    (t) =>
+      (t.title.toLowerCase() + t.content.toLowerCase()).includes(search.toLowerCase()) &&
+      filterFunc(t)
+  );
 }
 
-function paginateTickets(page: number) {
-  return tempData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+function sortTickets(tickets: Ticket[], sortKey: string) {
+  if (sortKey && comparatorStrategy[sortKey]) {
+    tickets.sort(comparatorStrategy[sortKey]);
+  }
+  return tickets;
+}
+
+function paginateTickets(tickets: Ticket[], page: number) {
+  return tickets.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+}
+
+function SplitByFirstOccurrence(str: string, separator: string) {
+  let index = str.indexOf(separator);
+  return [str.substr(0, index), str.substr(index + 1)];
 }
 
 module.exports = router;

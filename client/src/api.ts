@@ -1,6 +1,8 @@
 import axios from "axios";
 import { APIRootPath } from "@fed-exam/config";
 
+export const PAGE_SIZE = 20;
+
 export type Ticket = {
   id: string;
   title: string;

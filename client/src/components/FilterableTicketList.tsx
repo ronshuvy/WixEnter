@@ -4,44 +4,47 @@ import SearchBar from "./SearchBar";
 import TicketList from "./TicketList";
 import "./App.scss";
 import TicketSorter from "./TicketSorter";
+import InfiniteScroll from "react-infinite-scroller";
 
-export type SearchableTicketListState = {
-  tickets?: Ticket[];
+export type FilterableTicketListState = {
+  tickets: Ticket[];
   hiddenTickets: Set<string>;
   search: string;
-  sortKey: string | null;
+  sortKey?: string;
 };
 
 const api = createApiClient();
 
-class FilterableTicketList extends React.Component<{}, SearchableTicketListState> {
+class FilterableTicketList extends React.Component<{}, FilterableTicketListState> {
   constructor(props: {}) {
     super(props);
     this.state = {
       search: "",
       hiddenTickets: new Set(),
-      sortKey: null,
+      tickets: [],
     };
     this.onSearch = this.onSearch.bind(this);
     this.onHideTicket = this.onHideTicket.bind(this);
     this.onRestoreTickets = this.onRestoreTickets.bind(this);
     this.onSortTickets = this.onSortTickets.bind(this);
+    this.getMoreTickets = this.getMoreTickets.bind(this);
   }
 
   searchDebounce: any = null;
 
-  async componentDidMount() {
-    this.setState({
-      tickets: await api.getTickets(),
-    });
-  }
+  // async componentDidMount() {
+  //   this.setState({
+  //     tickets: await api.getTickets(),
+  //   });
+  // }
 
-  onSearch = async (val: string, newPage?: number) => {
+  onSearch = async (val: string) => {
     clearTimeout(this.searchDebounce);
 
     this.searchDebounce = setTimeout(async () => {
       this.setState({
         search: val,
+        tickets: await api.getTickets({ superSearch: val }),
       });
     }, 0);
   };
@@ -64,7 +67,7 @@ class FilterableTicketList extends React.Component<{}, SearchableTicketListState
       // @ts-ignore
       orderedTickets = [...this.state.tickets].reverse();
     } else {
-      orderedTickets = await api.getSortedTickets(sortKey);
+      orderedTickets = await api.getTickets({ sortBy: sortKey });
     }
 
     this.setState({
@@ -75,12 +78,26 @@ class FilterableTicketList extends React.Component<{}, SearchableTicketListState
   };
 
   getFilterTickets = (tickets: Ticket[]) => {
-    return tickets.filter(
-      (t) =>
-        (t.title.toLowerCase() + t.content.toLowerCase()).includes(
-          this.state.search.toLowerCase()
-        ) && !this.state.hiddenTickets.has(t.id)
-    );
+    return tickets.filter((t) => !this.state.hiddenTickets.has(t.id));
+
+    // return tickets.filter(
+    //   (t) =>
+    //     (t.title.toLowerCase() + t.content.toLowerCase()).includes(
+    //       this.state.search.toLowerCase()
+    //     ) && !this.state.hiddenTickets.has(t.id)
+    // );
+  };
+
+  getMoreTickets = async (page: number) => {
+    const prevTickets = this.state.tickets;
+    const nextTickets = await api.getTickets({
+      superSearch: this.state.search,
+      sortBy: this.state.sortKey,
+      page: page,
+    });
+    this.setState({
+      tickets: [...prevTickets, ...nextTickets],
+    });
   };
 
   render() {
@@ -107,11 +124,13 @@ class FilterableTicketList extends React.Component<{}, SearchableTicketListState
             <TicketSorter onSortTickets={this.onSortTickets} />
           </div>
         ) : null}
-        {tickets ? (
-          <TicketList tickets={this.getFilterTickets(tickets)} onHideTicket={this.onHideTicket} />
-        ) : (
-          <h2>Loading..</h2>
-        )}
+        <InfiniteScroll loadMore={this.getMoreTickets} hasMore={true}>
+          {tickets ? (
+            <TicketList tickets={this.getFilterTickets(tickets)} onHideTicket={this.onHideTicket} />
+          ) : (
+            <h2>Loading..</h2>
+          )}
+        </InfiniteScroll>
       </>
     );
   }

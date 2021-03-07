@@ -1,6 +1,5 @@
 import React from "react";
 import { sortKeys } from "../api";
-import Ticket from "./Ticket";
 
 export type TicketSorterProps = {
   onSortTickets: any;

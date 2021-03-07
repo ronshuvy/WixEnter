@@ -10,6 +10,12 @@ export type Ticket = {
   labels?: string[];
 };
 
+export type getTicketsParams = {
+  sortBy?: string;
+  superSearch?: string;
+  page?: number;
+};
+
 export const sortKeys: { [k: string]: any } = {
   date: (t1: Ticket, t2: Ticket) => t1.creationTime - t2.creationTime,
   title: (t1: Ticket, t2: Ticket) => t1.title.localeCompare(t2.title),
@@ -17,21 +23,13 @@ export const sortKeys: { [k: string]: any } = {
 };
 
 export type ApiClient = {
-  getTickets: () => Promise<Ticket[]>;
-  getSortedTickets: (sortKey: string) => Promise<Ticket[]>;
+  getTickets: (params?: getTicketsParams) => Promise<Ticket[]>;
 };
 
 export const createApiClient = (): ApiClient => {
   return {
-    getTickets: () => {
-      return axios.get(APIRootPath).then((res) => res.data);
-    },
-    getSortedTickets: (sortKey: string) => {
-      return axios
-        .get(APIRootPath, {
-          params: { sortBy: sortKey },
-        })
-        .then((res) => res.data);
+    getTickets: (params?: getTicketsParams) => {
+      return axios.get(APIRootPath, { params }).then((res) => res.data);
     },
   };
 };

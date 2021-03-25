@@ -12,8 +12,8 @@ class TicketList extends React.Component<TicketListProps, any> {
     const { tickets } = this.props;
     return (
       <ul className="tickets">
-        {tickets.map((ticket) => (
-          <li key={ticket.id}>
+        {tickets.map((ticket, i) => (
+          <li key={i}>
             <Ticket ticket={ticket} onHideTicket={this.props.onHideTicket} />
           </li>
         ))}

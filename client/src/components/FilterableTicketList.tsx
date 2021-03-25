@@ -45,10 +45,11 @@ class FilterableTicketList extends React.Component<{}, FilterableTicketListState
         search: val,
         tickets: await api.getTickets({ superSearch: val }),
       });
-    }, 0);
+    }, 300);
   };
 
   onHideTicket(ticketId: string) {
+    console.log("Clicked");
     this.setState(({ hiddenTickets }) => ({
       hiddenTickets: new Set(hiddenTickets).add(ticketId),
     }));
